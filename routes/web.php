@@ -19,5 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get('/success', function (Request $request) {
-    return "Welcome ".$request->code;
+    return "Welcome Home ".$request->code;
 });
