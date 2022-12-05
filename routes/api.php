@@ -19,12 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/musha", function (){
-    $response = Http::dd()->get("https://api.sandbox.ebay.com");
-    
-    return $response->body();
-});
-
 Route::get("auth/ebay/get-application-access-token", function(Request $request){
     
     $link = "https://api.sandbox.ebay.com/identity/v1/oauth2/token";
@@ -33,17 +27,14 @@ Route::get("auth/ebay/get-application-access-token", function(Request $request){
     $scope = "https://api.ebay.com/oauth/api_scope";
 
     $b64 = base64_encode($clientId.":".$clientSecert);
-    $encodedScope = urlencode($scope);
+
 
     $response = Http::withHeaders([
-        "Content-Type" => "application/x-www-form-urlencoded",
         "Authorization" => "Basic $b64"
-    ])->post($link, [
+    ])->asForm()->post($link, [
         "grant_type" => "client_credentials",
-        "scope" => $encodedScope
+        "scope" => $scope
     ]);
 
-    return view("test", ["data"=> $response->body()]);
-    // return $response->json("access_token");
-    // echo("musha");
+    return $response->body();
 });
